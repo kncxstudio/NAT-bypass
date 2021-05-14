@@ -34,7 +34,7 @@ func StartClient(clientID, clientAddrStr, serverAddrStr string) {
 			if CheckErr(err) {
 				log.Println("send msg successfully")
 			}
-			time.Sleep(1)
+			time.Sleep(1000)
 		}
 	}()
 
