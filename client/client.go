@@ -23,7 +23,8 @@ func StartClient(clientID, clientAddrStr, serverAddrStr string) {
 	CheckErr(err)
 	peerAddrStr := string(data)
 	log.Println("Peer Addr:", peerAddrStr)
-	peerAddr, _ := net.ResolveUDPAddr("udp", peerAddrStr)
+	peerAddr, err := net.ResolveUDPAddr("udp", peerAddrStr)
+	CheckErr(err)
 	peerConn, err := net.DialUDP("udp", srcAddr, peerAddr)
 	CheckErr(err)
 	go func() {
