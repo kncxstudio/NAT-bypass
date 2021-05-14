@@ -8,10 +8,12 @@ import (
 	"time"
 )
 
-func StartClient(clientID, serverAddrStr string) {
+func StartClient(clientID, clientAddrStr, serverAddrStr string) {
 	// svrAddr, err := net.ResolveUDPAddr("udp", serverAddrStr)
 	// CheckErr(err)
-	conn, err := net.Dial("udp", serverAddrStr)
+	srcAddr, _ := net.ResolveUDPAddr("udp", clientAddrStr)
+	serverAddr, _ := net.ResolveUDPAddr("udp", serverAddrStr)
+	conn, err := net.DialUDP("udp", srcAddr, serverAddr)
 	CheckErr(err)
 	_, err = conn.Write([]byte("first msg" + clientID))
 	CheckErr(err)
@@ -19,9 +21,10 @@ func StartClient(clientID, serverAddrStr string) {
 	data := make([]byte, 1024)
 	_, err = conn.Read(data)
 	CheckErr(err)
-	peerAddr := string(data)
+	peerAddrStr := string(data)
+	peerAddr, _ := net.ResolveUDPAddr("udp", peerAddrStr)
 	log.Println("Peer Addr:", peerAddr)
-	peerConn, err := net.Dial("udp", peerAddr)
+	peerConn, err := net.DialUDP("udp", srcAddr, peerAddr)
 	CheckErr(err)
 	go func() {
 		for {
