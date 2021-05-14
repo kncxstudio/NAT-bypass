@@ -19,14 +19,15 @@ func StartServer() {
 		data := make([]byte, 1024)
 		_, srcIP, err := conn.ReadFromUDP(data)
 		CheckErr(err)
+		log.Println("srr ip port:", srcIP.Port)
+		// peerAddr := conn.RemoteAddr().String()
 		if "" == hostA {
-			hostA = srcIP.IP.String() + strconv.Itoa(srcIP.Port)
+			hostA = srcIP.IP.String() + ":" + strconv.Itoa(srcIP.Port)
 			log.Println("A source IP:", hostA)
 		} else if "" == hostB {
-			hostB = srcIP.IP.String() + strconv.Itoa(srcIP.Port)
-			log.Println("B source IP:", hostA)
+			hostB = srcIP.IP.String() + ":" + strconv.Itoa(srcIP.Port)
+			log.Println("B source IP:", hostB)
 
-		} else {
 			addrA, err := net.ResolveUDPAddr("udp", hostA)
 			CheckErr(err)
 			conn.WriteToUDP([]byte(hostB), addrA)
@@ -35,6 +36,9 @@ func StartServer() {
 			conn.WriteToUDP([]byte(hostA), addrB)
 
 			log.Println("IP data send finish!")
+
+			hostA = ""
+			hostB = ""
 		}
 
 	}

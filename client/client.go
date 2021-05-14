@@ -5,6 +5,7 @@ import (
 	"log"
 	. "natbypass/utils"
 	"net"
+	"time"
 )
 
 func StartClient(clientID, serverAddrStr string) {
@@ -19,7 +20,7 @@ func StartClient(clientID, serverAddrStr string) {
 	_, err = conn.Read(data)
 	CheckErr(err)
 	peerAddr := string(data)
-
+	log.Println("Peer Addr:", peerAddr)
 	peerConn, err := net.Dial("udp", peerAddr)
 	CheckErr(err)
 	go func() {
@@ -28,6 +29,7 @@ func StartClient(clientID, serverAddrStr string) {
 			if CheckErr(err) {
 				log.Println("send msg successfully")
 			}
+			time.Sleep(1)
 		}
 	}()
 
